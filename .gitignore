@@ -1,5 +1,5 @@
 # Sequelize db access credentials
-config/database.js
+config/
 
 # Logs
 logs
