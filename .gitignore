@@ -1,3 +1,6 @@
+# Sequelize db access credentials
+config/database.js
+
 # Logs
 logs
 *.log
