@@ -12,7 +12,7 @@ class SessionController {
       return res.status(401).json({ error: 'User not found' }); // Unauthorized
     }
     if (!(await user.checkPassword(password))) {
-      // User not found
+      // Password does not match
       return res.status(401).json({ error: 'Wrong password' }); // Unauthorized
     }
     const { id, name } = user;
