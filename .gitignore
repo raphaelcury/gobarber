@@ -1,6 +1,9 @@
 # Sequelize db access credentials
 config/
 
+# Temporary files
+temp/
+
 # Logs
 logs
 *.log
