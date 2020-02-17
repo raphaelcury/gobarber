@@ -1,3 +1,4 @@
 import app from './app';
+import { serverParams } from './config/server';
 
-app.listen(3333);
+app.listen(serverParams.port);
