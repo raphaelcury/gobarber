@@ -26,13 +26,20 @@ class UserController {
       return res.status(400).json({ error: 'User (email) already exists.' });
     }
     // Cria usuário
-    const { id, name, email, provider } = await User.create(req.body);
-    return res.json({
-      id,
-      name,
-      email,
-      provider,
-    });
+    try {
+      const { id, name, email, provider, avatar_id } = await User.create(
+        req.body
+      );
+      return res.json({
+        id,
+        name,
+        email,
+        provider,
+        avatar_id,
+      });
+    } catch (error) {
+      return res.status(500).json(error);
+    }
   }
 
   async update(req, res) {
@@ -71,14 +78,19 @@ class UserController {
       return res.status(401).json({ error: 'Wrong password' }); // Unauthorized
     }
 
-    const { id, name, provider } = await user.update(req.body);
+    try {
+      const { id, name, provider, avatar_id } = await user.update(req.body);
 
-    return res.json({
-      id,
-      name,
-      email,
-      provider,
-    });
+      return res.json({
+        id,
+        name,
+        email,
+        provider,
+        avatar_id,
+      });
+    } catch (error) {
+      return res.status(500).json(error);
+    }
   }
 }
 
