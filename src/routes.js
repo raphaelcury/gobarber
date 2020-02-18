@@ -21,10 +21,10 @@ routes.post('/users', UserController.store);
 routes.use(authMiddleware);
 routes.put('/users', UserController.update);
 routes.get('/providers', ProviderController.index);
+routes.post('/appointments', AppointmentController.store);
+routes.get('/appointments', AppointmentController.index);
 
 // Rota de upload de arquivos usa o multer
 routes.post('/files', upload.single('file'), FileController.store);
-
-routes.post('/appointments', AppointmentController.store);
 
 export default routes;
