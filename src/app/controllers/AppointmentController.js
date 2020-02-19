@@ -5,6 +5,8 @@ import Appointment from '../models/Appointment';
 import User from '../models/User';
 import File from '../models/File';
 
+import * as UserUtils from '../utils/UserUtils';
+
 const pageSize = 20;
 
 class AppointmentController {
@@ -52,18 +54,15 @@ class AppointmentController {
       });
     }
 
-    // Procura user para validar se é provider
     try {
       const { provider_id, date } = req.body;
-      const user = await User.findOne({ where: { id: provider_id } });
-      // Se usuário não for encontrado
-      if (!user) {
+      const checkUser = UserUtils.checkProvider(provider_id);
+      if (checkUser === UserUtils.ERROR_USER_NOT_FOUND) {
         return res
           .status(400)
           .json({ error: `User ${provider_id} does not exist` });
       }
-      // Se usuário não for provider
-      if (!user.provider) {
+      if (checkUser === UserUtils.ERROR_USER_IS_NOT_PROVIDER) {
         return res
           .status(400)
           .json({ error: `User ${provider_id} is not a service provider` });

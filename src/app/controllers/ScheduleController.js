@@ -1,22 +1,20 @@
 import { startOfDay, endOfDay, parseISO } from 'date-fns';
 import { Op } from 'sequelize';
 
-import User from '../models/User';
 import Appointment from '../models/Appointment';
+
+import * as UserUtils from '../utils/UserUtils';
 
 class ScheduleController {
   async index(req, res) {
-    // Procura user para validar se é provider
     try {
-      const user = await User.findOne({ where: { id: req.userId } });
-      // Se usuário não for encontrado
-      if (!user) {
+      const checkUser = UserUtils.checkProvider(req.userId);
+      if (checkUser === UserUtils.ERROR_USER_NOT_FOUND) {
         return res
           .status(400)
           .json({ error: `User ${req.userId} does not exist` });
       }
-      // Se usuário não for provider
-      if (!user.provider) {
+      if (checkUser === UserUtils.ERROR_USER_IS_NOT_PROVIDER) {
         return res
           .status(400)
           .json({ error: `User ${req.userId} is not a service provider` });
