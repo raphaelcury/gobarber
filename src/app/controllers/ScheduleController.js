@@ -24,6 +24,7 @@ class ScheduleController {
       const schedule = await Appointment.findAll({
         where: {
           provider_id: req.userId,
+          canceled_at: null,
           date: {
             [Op.between]: [startOfDay(parsedDate), endOfDay(parsedDate)],
           },
