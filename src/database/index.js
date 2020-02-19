@@ -6,6 +6,7 @@ import File from '../app/models/File';
 import Appointment from '../app/models/Appointment';
 
 import databaseConfig from '../config/database';
+import mongoConfig from '../config/mongo';
 
 const models = [User, File, Appointment];
 
@@ -26,12 +27,8 @@ class Database {
 
   initMongo() {
     this.mongoConnection = mongoose.connect(
-      'mongodb://localhost:27017/gobarber',
-      {
-        useNewUrlParser: true,
-        useFindAndModify: true,
-        useUnifiedTopology: true,
-      }
+      mongoConfig.url,
+      mongoConfig.options
     );
   }
 }
