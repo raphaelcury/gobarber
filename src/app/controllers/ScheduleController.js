@@ -32,7 +32,7 @@ class ScheduleController {
         order: ['date'],
       });
 
-      return res.json({ schedule });
+      return res.json(schedule);
     } catch (error) {
       return res.status(500).json({ error });
     }
