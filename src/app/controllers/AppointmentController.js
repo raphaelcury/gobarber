@@ -5,9 +5,12 @@ import Appointment from '../models/Appointment';
 import User from '../models/User';
 import File from '../models/File';
 
+const pageSize = 20;
+
 class AppointmentController {
   async index(req, res) {
     try {
+      const { page = 1 } = req.query;
       const appointments = await Appointment.findAll({
         where: {
           user_id: req.userId,
@@ -15,6 +18,8 @@ class AppointmentController {
         },
         attributes: ['id', 'date'],
         order: ['date'],
+        limit: pageSize,
+        offset: (page - 1) * pageSize,
         include: [
           {
             model: User,
