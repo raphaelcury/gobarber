@@ -59,7 +59,12 @@ class AppointmentController {
 
     try {
       const { provider_id, date } = req.body;
-      const checkProvider = UserUtils.checkProvider(provider_id);
+      if (parseInt(provider_id, 10) === req.userId) {
+        return res
+          .status(400)
+          .json({ error: `User cannot create an appointment for himself` });
+      }
+      const checkProvider = await UserUtils.checkProvider(provider_id);
       if (checkProvider === UserUtils.ERROR_USER_NOT_FOUND) {
         return res
           .status(400)
@@ -101,7 +106,7 @@ class AppointmentController {
 
       await Notification.create({
         content: `Novo agendamento de ${user.name} para: ${formattedDate}`,
-        user_id: provider_id,
+        userId: provider_id,
       });
 
       return res.json(appointment);

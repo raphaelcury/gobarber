@@ -3,22 +3,9 @@ import { Op } from 'sequelize';
 
 import Appointment from '../models/Appointment';
 
-import * as UserUtils from '../utils/UserUtils';
-
 class ScheduleController {
   async index(req, res) {
     try {
-      const checkUser = UserUtils.checkProvider(req.userId);
-      if (checkUser === UserUtils.ERROR_USER_NOT_FOUND) {
-        return res
-          .status(400)
-          .json({ error: `User ${req.userId} does not exist` });
-      }
-      if (checkUser === UserUtils.ERROR_USER_IS_NOT_PROVIDER) {
-        return res
-          .status(400)
-          .json({ error: `User ${req.userId} is not a service provider` });
-      }
       const { date } = req.query;
       const parsedDate = parseISO(date);
       const schedule = await Appointment.findAll({

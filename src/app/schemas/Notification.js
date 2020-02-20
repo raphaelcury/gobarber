@@ -6,7 +6,7 @@ const NotificationSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    user_id: {
+    userId: {
       type: Number,
       required: true,
     },
