@@ -1,9 +1,12 @@
 import * as Yup from 'yup';
-import { startOfHour, parseISO, isBefore } from 'date-fns';
+import { startOfHour, parseISO, isBefore, format } from 'date-fns';
+import ptBr from 'date-fns/locale/pt-BR';
 
 import Appointment from '../models/Appointment';
 import User from '../models/User';
 import File from '../models/File';
+
+import Notification from '../schemas/Notification';
 
 import * as UserUtils from '../utils/UserUtils';
 
@@ -56,13 +59,13 @@ class AppointmentController {
 
     try {
       const { provider_id, date } = req.body;
-      const checkUser = UserUtils.checkProvider(provider_id);
-      if (checkUser === UserUtils.ERROR_USER_NOT_FOUND) {
+      const checkProvider = UserUtils.checkProvider(provider_id);
+      if (checkProvider === UserUtils.ERROR_USER_NOT_FOUND) {
         return res
           .status(400)
           .json({ error: `User ${provider_id} does not exist` });
       }
-      if (checkUser === UserUtils.ERROR_USER_IS_NOT_PROVIDER) {
+      if (checkProvider === UserUtils.ERROR_USER_IS_NOT_PROVIDER) {
         return res
           .status(400)
           .json({ error: `User ${provider_id} is not a service provider` });
@@ -89,9 +92,21 @@ class AppointmentController {
         provider_id,
         date: hourStart,
       });
+
+      // Notifica o provider
+      const user = await User.findByPk(req.userId);
+      const formattedDate = format(hourStart, 'dd/MM/yyyy (EEEE) HH:mm', {
+        locale: ptBr,
+      });
+
+      await Notification.create({
+        content: `Novo agendamento de ${user.name} para: ${formattedDate}`,
+        user_id: provider_id,
+      });
+
       return res.json(appointment);
     } catch (error) {
-      return res.status(500).json(error);
+      return res.status(500).json({ error });
     }
   }
 }
