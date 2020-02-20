@@ -65,15 +65,8 @@ class AppointmentController {
           .json({ error: `User cannot create an appointment for himself` });
       }
       const checkProvider = await UserUtils.checkProvider(provider_id);
-      if (checkProvider === UserUtils.ERROR_USER_NOT_FOUND) {
-        return res
-          .status(400)
-          .json({ error: `User ${provider_id} does not exist` });
-      }
-      if (checkProvider === UserUtils.ERROR_USER_IS_NOT_PROVIDER) {
-        return res
-          .status(400)
-          .json({ error: `User ${provider_id} is not a service provider` });
+      if (checkProvider.result !== UserUtils.USER_IS_PROVIDER) {
+        return res.status(400).json({ error: checkProvider.message });
       }
 
       const hourStart = startOfHour(parseISO(date));
