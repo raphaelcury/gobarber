@@ -31,6 +31,7 @@ routes.get('/appointments', AppointmentController.index);
 routes.use(providerMiddleware);
 routes.get('/schedule', ScheduleController.index);
 routes.get('/notifications', NotificationController.index);
+routes.put('/notifications/:id', NotificationController.update);
 
 // Rota de upload de arquivos que usa o multer: upload.single
 routes.post('/files', upload.single('file'), FileController.store);
