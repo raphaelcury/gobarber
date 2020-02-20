@@ -1,6 +1,6 @@
 import Notification from '../schemas/Notification';
 
-const pageSize = 20;
+const PAGE_SIZE = 20;
 
 class NotificationController {
   async index(req, res) {
@@ -8,7 +8,7 @@ class NotificationController {
       userId: req.userId,
     })
       .sort({ createdAt: 'desc' })
-      .limit(pageSize);
+      .limit(PAGE_SIZE);
     return res.json(notifications);
   }
 

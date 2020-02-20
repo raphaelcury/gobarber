@@ -1,5 +1,11 @@
 import * as Yup from 'yup';
-import { startOfHour, parseISO, isBefore, format } from 'date-fns';
+import {
+  startOfHour,
+  parseISO,
+  isBefore,
+  format,
+  differenceInMinutes,
+} from 'date-fns';
 import ptBr from 'date-fns/locale/pt-BR';
 
 import Appointment from '../models/Appointment';
@@ -10,7 +16,9 @@ import Notification from '../schemas/Notification';
 
 import * as UserUtils from '../utils/UserUtils';
 
-const pageSize = 20;
+const PAGE_SIZE = 20;
+const MIN_HOURS_TO_CANCEL = 2; // Diferença mínima em horas para cancelamento
+const MIN_TO_CANCEL = MIN_HOURS_TO_CANCEL * 60;
 
 class AppointmentController {
   async index(req, res) {
@@ -23,8 +31,8 @@ class AppointmentController {
         },
         attributes: ['id', 'date'],
         order: ['date'],
-        limit: pageSize,
-        offset: (page - 1) * pageSize,
+        limit: PAGE_SIZE,
+        offset: (page - 1) * PAGE_SIZE,
         include: [
           {
             model: User,
@@ -102,6 +110,32 @@ class AppointmentController {
         userId: provider_id,
       });
 
+      return res.json(appointment);
+    } catch (error) {
+      return res.status(500).json({ error });
+    }
+  }
+
+  async delete(req, res) {
+    try {
+      const appointment = await Appointment.findByPk(req.params.id);
+      if (!appointment) {
+        return res.status(400).json({ error: 'Appointment does not exist' });
+      }
+      if (appointment.user_id !== req.userId) {
+        return res
+          .status(401)
+          .json({ error: 'You are not allowed to cancel this appointment' });
+      }
+      const dateDifference = differenceInMinutes(appointment.date, new Date());
+      if (dateDifference < MIN_TO_CANCEL) {
+        return res.status(400).json({
+          error: `You can only cancel an appointment ${MIN_HOURS_TO_CANCEL} hours before it`,
+        });
+      }
+
+      appointment.canceled_at = new Date();
+      await appointment.save();
       return res.json(appointment);
     } catch (error) {
       return res.status(500).json({ error });
