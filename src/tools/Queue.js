@@ -29,8 +29,12 @@ class Queue {
   processQueue() {
     jobs.forEach(job => {
       const { queue, handle } = this.queues[job.key];
-      queue.process(handle);
+      queue.on('failed', this.handleFailure).process(handle);
     });
+  }
+
+  handleFailure(job, err) {
+    console.log(`JOB ${job.queue.name}: FAILED`, err);
   }
 }
 
