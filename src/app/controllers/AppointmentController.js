@@ -12,9 +12,10 @@ import Appointment from '../models/Appointment';
 import User from '../models/User';
 import File from '../models/File';
 
-import Notification from '../schemas/Notification';
+import CancellationMailJob from '../jobs/CancellationMailJob';
+import Queue from '../../tools/Queue';
 
-import Mail from '../../tools/Mail';
+import Notification from '../schemas/Notification';
 
 import * as UserUtils from '../utils/UserUtils';
 
@@ -151,17 +152,8 @@ class AppointmentController {
 
       appointment.canceled_at = new Date();
       await appointment.save();
-      await Mail.sendMail({
-        to: `${appointment.provider.name} <${appointment.provider.email}>`,
-        subject: 'Agendamento cancelado',
-        template: 'cancellation',
-        context: {
-          provider: appointment.provider.name,
-          user: appointment.user.name,
-          date: format(appointment.date, 'dd/MM/yyyy (EEEE) HH:mm', {
-            locale: ptBr,
-          }),
-        },
+      Queue.add(CancellationMailJob.key, {
+        appointment,
       });
       return res.json(appointment);
     } catch (error) {
