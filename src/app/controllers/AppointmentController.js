@@ -26,7 +26,7 @@ const MIN_TO_CANCEL = MIN_HOURS_TO_CANCEL * 60;
 class AppointmentController {
   async index(req, res) {
     const { page = 1 } = req.query;
-    const appointments = await Appointment.findddAll({
+    const appointments = await Appointment.findAll({
       where: {
         user_id: req.userId,
         canceled_at: null,
