@@ -18,6 +18,9 @@ const routes = new Router();
 const upload = multer(multerConfig);
 
 // Rotas sem autenticacao
+routes.get('/debug-sentry', () => {
+  throw new Error('New Sentry test successfull!');
+});
 routes.post('/sessions', SessionController.store);
 routes.post('/users', UserController.store);
 
