@@ -1,6 +1,3 @@
-# Sequelize db access credentials
-config/
-
 # Temporary files
 temp/
 

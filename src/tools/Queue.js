@@ -1,3 +1,5 @@
+import 'dotenv/config';
+
 import Bee from 'bee-queue';
 
 import CancellationMailJob from '../app/jobs/CancellationMailJob';
