@@ -1,6 +1,7 @@
 import * as Yup from 'yup';
 
 import User from '../models/User';
+import File from '../models/File';
 
 class UserController {
   async store(req, res) {
@@ -59,9 +60,11 @@ class UserController {
 
     const { email, oldPassword } = req.body;
     const user = await User.findByPk(req.userId);
+    console.log(req.userId);
 
     if (email && email !== user.email) {
       // Verifica se já existe usuário com o email
+      console.log(email);
       const existingUser = await User.findOne({
         where: { email },
       });
@@ -73,14 +76,21 @@ class UserController {
     if (oldPassword && !(await user.checkPassword(oldPassword))) {
       return res.status(401).json({ error: 'Wrong password' }); // Unauthorized
     }
-    const { id, name, provider, avatar_id } = await user.update(req.body);
+    await user.update(req.body);
+    const { id, name, provider, avatar } = await User.findByPk(req.userId, {
+      include: {
+        model: File,
+        as: 'avatar',
+        attributes: ['id', 'path', 'url'],
+      },
+    });
 
     return res.json({
       id,
       name,
       email,
       provider,
-      avatar_id,
+      avatar,
     });
   }
 }
