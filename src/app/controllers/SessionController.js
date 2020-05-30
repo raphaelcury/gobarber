@@ -37,12 +37,13 @@ class SessionController {
       // Password does not match
       return res.status(401).json({ error: 'Wrong password' }); // Unauthorized
     }
-    const { id, name, avatar } = user;
+    const { id, name, provider, avatar } = user;
     return res.json({
       user: {
         id,
         name,
         email,
+        provider,
         avatar,
       },
       // payload = id
