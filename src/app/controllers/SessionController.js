@@ -43,11 +43,7 @@ class SessionController {
         id,
         name,
         email,
-        avatar: {
-          id: avatar.id,
-          path: avatar.path,
-          url: avatar.url,
-        },
+        avatar,
       },
       // payload = id
       token: jwt.sign({ id }, authConfig.secret, {
