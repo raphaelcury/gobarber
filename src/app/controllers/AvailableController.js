@@ -11,19 +11,7 @@ import { Op } from 'sequelize';
 
 import Appointment from '../models/Appointment';
 
-const workingHoursOfDay = [
-  '08:00',
-  '09:00',
-  '10:00',
-  '11:00',
-  '12:00',
-  '13:00',
-  '14:00',
-  '15:00',
-  '16:00',
-  '17:00',
-  '18:00',
-];
+import { workingHoursOfDay } from './ScheduleController';
 
 class AvailableController {
   async index(req, res) {
