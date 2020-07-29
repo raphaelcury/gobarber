@@ -5,6 +5,7 @@ import {
   setHours,
   setMinutes,
   setSeconds,
+  setMilliseconds,
   isEqual,
   isBefore,
 } from 'date-fns';
@@ -54,8 +55,8 @@ class ScheduleController {
       const [strHour, strMinute] = time.split(':');
       const hour = Number(strHour);
       const minute = Number(strMinute);
-      const fullDate = setSeconds(
-        setMinutes(setHours(parsedDate, hour), minute),
+      const fullDate = setMilliseconds(
+        setSeconds(setMinutes(setHours(parsedDate, hour), minute), 0),
         0
       );
       const appointment = busySchedule.find(busyTime => {
